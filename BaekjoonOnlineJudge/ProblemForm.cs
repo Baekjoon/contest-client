@@ -158,13 +158,14 @@ namespace BaekjoonOnlineJudge
                     solution_problem[(int)dict["solution_id"]] = (string)dict["problem_title"];
                     solution_language[(int)dict["solution_id"]] = (string)dict["language_name"];
                     Dictionary<string, object> temp = new Dictionary<string, object>();
-                    temp["solution_id"] = dict["solution_id"];
+                    temp["solution_id"] = dict["solution_id"].ToString();
                     temp["problem_title"] = dict["problem_title"];
                     temp["language_name"] = dict["language_name"];
                     temp["in_date"] = dict["in_date"];
                     temp["result_name"] = "기다리는 중";
+                    submission.Reverse();
                     submission.Add(temp);
-                    update_submission();
+                    submission.Reverse();
                     MessageBox.Show(String.Format("제출 확인\n\n문제: {0}\n\n언어: {1}\n\n제출 번호: {2}", dict["problem_title"], dict["language_name"], dict["solution_id"]), "제출 확인", MessageBoxButtons.OK);
 
                 }
@@ -181,6 +182,15 @@ namespace BaekjoonOnlineJudge
                     {
                         int solution_id = (int)dict["solution_id"];
                         solutionWatch.Remove(dict["solution_id"]);
+                        for (int i = 0; i < submission.Count; i++)
+                        {
+                            Dictionary<string, object> d = (Dictionary<string, object>)submission[i];
+                            if (int.Parse((string)d["solution_id"]) == solution_id)
+                            {
+                                d["result_name"] = dict["result_name"];
+                                break;
+                            }
+                        }
                         MessageBox.Show(String.Format("채점 결과\n\n문제: {0}\n\n언어: {1}\n\n제출 번호: {2}\n\n\n\n채점 결과: {3}", solution_problem[solution_id], solution_language[solution_id], dict["solution_id"],dict["result_name"]), "채점 결과", MessageBoxButtons.OK);
                     }
                 }
@@ -189,7 +199,7 @@ namespace BaekjoonOnlineJudge
             else if ((int)dict["what"] == CONTEST_SUBMISSION)
             {
                 submission = (ArrayList)dict["submission"];
-                update_submission();
+                //update_submission();
             }
         }
 
@@ -229,8 +239,16 @@ namespace BaekjoonOnlineJudge
 
                 penalty = (diff.Days * 24 * 60 + diff.Hours * 60 + diff.Minutes).ToString();
 
-                ListViewItem l = new ListViewItem(new string[] { (string)d["solution_id"], String.Format("{0}번. {1}",d["contest_problem_number"],d["problem_title"]),penalty,(string)d["result_name"],(string)d["language_name"] });
-                statusListview.Items.Add(l);
+                if (d.ContainsKey("contest_problem_number"))
+                {
+                    ListViewItem l = new ListViewItem(new string[] { (string)d["solution_id"], String.Format("{0}번. {1}", d["contest_problem_number"], d["problem_title"]), penalty, (string)d["result_name"], (string)d["language_name"] });
+                    statusListview.Items.Add(l);
+                }
+                else
+                {
+                    ListViewItem l = new ListViewItem(new string[] { (string)d["solution_id"], String.Format("{0}", d["problem_title"]), penalty, (string)d["result_name"], (string)d["language_name"] });
+                    statusListview.Items.Add(l);
+                }
                 
             }
 
@@ -485,6 +503,14 @@ namespace BaekjoonOnlineJudge
                 {
                     MessageBox.Show("파일을 찾을 수 없습니다");
                 }
+            }
+        }
+
+        private void problemTabControl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (problemTabControl.SelectedIndex == 1)
+            {
+                update_submission();
             }
         }
     }
