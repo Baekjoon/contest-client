@@ -47,7 +47,7 @@
             this.problemComboBox = new System.Windows.Forms.ComboBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.statusListview = new System.Windows.Forms.ListView();
-            this.label2 = new System.Windows.Forms.Label();
+            this.submissionCountLabel = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.questionButton = new System.Windows.Forms.Button();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
@@ -257,7 +257,7 @@
             // 
             this.tabPage2.BackColor = System.Drawing.SystemColors.Control;
             this.tabPage2.Controls.Add(this.statusListview);
-            this.tabPage2.Controls.Add(this.label2);
+            this.tabPage2.Controls.Add(this.submissionCountLabel);
             this.tabPage2.Location = new System.Drawing.Point(4, 24);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -267,21 +267,24 @@
             // 
             // statusListview
             // 
+            this.statusListview.FullRowSelect = true;
+            this.statusListview.GridLines = true;
             this.statusListview.Location = new System.Drawing.Point(0, 29);
             this.statusListview.Name = "statusListview";
             this.statusListview.Size = new System.Drawing.Size(535, 342);
             this.statusListview.TabIndex = 1;
             this.statusListview.UseCompatibleStateImageBehavior = false;
+            this.statusListview.View = System.Windows.Forms.View.Details;
             // 
-            // label2
+            // submissionCountLabel
             // 
-            this.label2.Font = new System.Drawing.Font("나눔고딕", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.label2.Location = new System.Drawing.Point(492, 7);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(38, 22);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "0";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.submissionCountLabel.Font = new System.Drawing.Font("나눔고딕", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.submissionCountLabel.Location = new System.Drawing.Point(492, 7);
+            this.submissionCountLabel.Name = "submissionCountLabel";
+            this.submissionCountLabel.Size = new System.Drawing.Size(38, 22);
+            this.submissionCountLabel.TabIndex = 0;
+            this.submissionCountLabel.Text = "0";
+            this.submissionCountLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // tabPage3
             // 
@@ -404,7 +407,7 @@
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label submissionCountLabel;
         private System.Windows.Forms.ListView statusListview;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.ComboBox questionProblemComboBox;

@@ -22,6 +22,7 @@ namespace BaekjoonOnlineJudge
         private const int CONTEST_INFO = 1;
         private const int CONTEST_SUBMIT = 2;
         private const int CONTEST_STATUS = 3;
+        private const int CONTEST_SUBMISSION = 4;
         private Dictionary<string, object> contest;
         private DateTime server_time;
         private TimeSpan server_diff;
@@ -33,6 +34,7 @@ namespace BaekjoonOnlineJudge
         private Dictionary<int,string> solution_problem = new Dictionary<int,string>();
         private Dictionary<int,string> solution_language = new Dictionary<int,string>();
         private Dictionary<int, string> solution_key = new Dictionary<int, string>();
+        private ArrayList submission = new ArrayList();
         bool updating = false;
         public ProblemForm()
         {
@@ -94,6 +96,15 @@ namespace BaekjoonOnlineJudge
                 dict["solution_id"] = d["solution_id"];
                 e.Result = dict;
             }
+            else if (what == CONTEST_SUBMISSION)
+            {
+                MyWebRequest loginRequest = new MyWebRequest("https://www.acmicpc.net/client/submission", "POST", String.Format("login_key={0}&contest_id={1}", Info.login_key, d["contest_id"]));
+                string response = loginRequest.GetResponse();
+                Console.WriteLine(response);
+                var dict = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(response);
+                dict["what"] = what;
+                e.Result = dict;
+            }
         }
 
         void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -127,6 +138,11 @@ namespace BaekjoonOnlineJudge
                     solutionWatchTimer.Elapsed += solutionWatchTimer_Elapsed;
                     solutionWatchTimer.Interval = 5000;
                     solutionWatchTimer.Start();
+
+                    Dictionary<string, object> d = new Dictionary<string, object>();
+                    d["what"] = CONTEST_SUBMISSION;
+                    d["contest_id"] = contest["contest_id"];
+                    backgroundWorker.RunWorkerAsync(d);
                 }
             }
             else if ((int)dict["what"] == CONTEST_SUBMIT)
@@ -141,6 +157,14 @@ namespace BaekjoonOnlineJudge
                     solution_key[(int)dict["solution_id"]] = (string)dict["key"];
                     solution_problem[(int)dict["solution_id"]] = (string)dict["problem_title"];
                     solution_language[(int)dict["solution_id"]] = (string)dict["language_name"];
+                    Dictionary<string, object> temp = new Dictionary<string, object>();
+                    temp["solution_id"] = dict["solution_id"];
+                    temp["problem_title"] = dict["problem_title"];
+                    temp["language_name"] = dict["language_name"];
+                    temp["in_date"] = dict["in_date"];
+                    temp["result_name"] = "기다리는 중";
+                    submission.Add(temp);
+                    update_submission();
                     MessageBox.Show(String.Format("제출 확인\n\n문제: {0}\n\n언어: {1}\n\n제출 번호: {2}", dict["problem_title"], dict["language_name"], dict["solution_id"]), "제출 확인", MessageBoxButtons.OK);
 
                 }
@@ -161,6 +185,69 @@ namespace BaekjoonOnlineJudge
                     }
                 }
                 updating = false;
+            }
+            else if ((int)dict["what"] == CONTEST_SUBMISSION)
+            {
+                submission = (ArrayList)dict["submission"];
+                update_submission();
+            }
+        }
+
+        private void update_submission()
+        {
+            statusListview.Clear();
+            statusListview.Columns.Add("채점 번호");
+            statusListview.Columns.Add("문제");
+            statusListview.Columns.Add("시간");
+            statusListview.Columns.Add("결과");
+            statusListview.Columns.Add("언어");
+
+            for (int i = 0; i < statusListview.Columns.Count; i++)
+            {
+                statusListview.Columns[i].AutoResize(ColumnHeaderAutoResizeStyle.HeaderSize);
+
+            }
+
+            submissionCountLabel.Text = submission.Count.ToString();
+
+            DateTime contest_start = DateTime.Parse((string)contest["contest_start"]);
+
+            for (int i = 0; i < submission.Count; i++)
+            {
+                Dictionary<string, object> d = (Dictionary<string, object>)submission[i];
+                string penalty = "";
+                DateTime in_date = DateTime.Now;
+                if (d["in_date"] is string)
+                {
+                    in_date = DateTime.Parse((string)d["in_date"]);
+                }
+                else
+                {
+                    in_date = (DateTime)d["in_date"];
+                }
+                TimeSpan diff = in_date - contest_start;
+
+                penalty = (diff.Days * 24 * 60 + diff.Hours * 60 + diff.Minutes).ToString();
+
+                ListViewItem l = new ListViewItem(new string[] { (string)d["solution_id"], String.Format("{0}번. {1}",d["contest_problem_number"],d["problem_title"]),penalty,(string)d["result_name"],(string)d["language_name"] });
+                statusListview.Items.Add(l);
+                
+            }
+
+            if (submission.Count > 0)
+            {
+                for (int i = 0; i < statusListview.Columns.Count; i++)
+                {
+                    if (i == 0 || i == 2 || i == 3)
+                    {
+                        statusListview.Columns[i].AutoResize(ColumnHeaderAutoResizeStyle.HeaderSize);
+
+                    }
+                    else
+                    {
+                        statusListview.Columns[i].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+                    }
+                }
             }
         }
 
