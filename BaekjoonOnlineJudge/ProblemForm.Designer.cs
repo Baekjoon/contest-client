@@ -55,6 +55,8 @@
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.questionProblemComboBox = new System.Windows.Forms.ComboBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.problemTabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -65,6 +67,7 @@
             this.tabPage3.SuspendLayout();
             this.groupBox6.SuspendLayout();
             this.groupBox5.SuspendLayout();
+            this.tabPage4.SuspendLayout();
             this.SuspendLayout();
             // 
             // contestStatusLabel
@@ -290,6 +293,7 @@
             // tabPage3
             // 
             this.tabPage3.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage3.Controls.Add(this.label1);
             this.tabPage3.Controls.Add(this.questionButton);
             this.tabPage3.Controls.Add(this.groupBox6);
             this.tabPage3.Controls.Add(this.groupBox5);
@@ -353,11 +357,30 @@
             // tabPage4
             // 
             this.tabPage4.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage4.Controls.Add(this.label2);
             this.tabPage4.Location = new System.Drawing.Point(4, 24);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Size = new System.Drawing.Size(536, 405);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "질문 보기";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(20, 358);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(311, 15);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "아직 질문은 미완성입니다. 홈페이지에서 이용해 주세요.";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(113, 195);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(311, 15);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "아직 질문은 미완성입니다. 홈페이지에서 이용해 주세요.";
             // 
             // ProblemForm
             // 
@@ -378,9 +401,12 @@
             this.groupBox1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
             this.groupBox5.ResumeLayout(false);
+            this.tabPage4.ResumeLayout(false);
+            this.tabPage4.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -415,5 +441,7 @@
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.TextBox questionTextBox;
         private System.Windows.Forms.Button questionButton;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
     }
 }
